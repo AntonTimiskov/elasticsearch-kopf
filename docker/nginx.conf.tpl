@@ -28,7 +28,7 @@ http {
 
   {% if KOPF_SSL_CERT is defined %}
   server {
-    listen 80;
+    listen {% if KOPF_PORT is defined %} {{ KOPF_PORT }} {% else %} 80 {% endif %};
     server_name {{ KOPF_SERVER_NAME }};
     return 301 https://{{ KOPF_SERVER_NAME }}$request_uri;
   }
@@ -36,13 +36,13 @@ http {
 
   server {
     {% if KOPF_SSL_CERT is defined %}
-    listen 443 ssl;
+    listen {% if KOPF_PORT is defined %} {{ KOPF_PORT }} {% else %} 443 {% endif %} ssl;
 
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     ssl_certificate {{ KOPF_SSL_CERT }};
     ssl_certificate_key {{ KOPF_SSL_KEY }};
     {% else %}
-    listen 80;
+    listen {% if KOPF_PORT is defined %} {{ KOPF_PORT }} {% else %} 80 {% endif %};
     {% endif %}
 
     server_name {{ KOPF_SERVER_NAME }};
